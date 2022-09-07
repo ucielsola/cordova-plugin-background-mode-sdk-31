@@ -1,6 +1,5 @@
 /*
  Copyright 2013 Sebastián Katzer
-
  Licensed to the Apache Software Foundation (ASF) under one
  or more contributor license agreements.  See the NOTICE file
  distributed with this work for additional information
@@ -8,9 +7,7 @@
  to you under the Apache License, Version 2.0 (the
  "License"); you may not use this file except in compliance
  with the License.  You may obtain a copy of the License at
-
  http://www.apache.org/licenses/LICENSE-2.0
-
  Unless required by applicable law or agreed to in writing,
  software distributed under the License is distributed on an
  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -219,10 +216,16 @@ public class ForegroundService extends Service {
         setColor(notification, settings);
 
         if (intent != null && settings.optBoolean("resume")) {
+            int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                flags = flags | PendingIntent.FLAG_MUTABLE;
+            }
+
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             PendingIntent contentIntent = PendingIntent.getActivity(
                     context, NOTIFICATION_ID, intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
+                    flags);
 
 
             notification.setContentIntent(contentIntent);
